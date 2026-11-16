@@ -127,8 +127,8 @@ Run these test cases in order to interactively verify all Milestone 4 rubric req
 - **Expected Output:** Alice gets `"status": "reserved"`; Bob gets `"status": "conflict"`.
 
 > 🎥 **VIDEO CUE:**
-> * **Action for Recorder:** Highlight the terminal output where Bob receives `"status": "conflict"` while Alice succeeds.
-> * **What to say:** *"This proves our mutual exclusion algorithm successfully prevents conflicting operations. Rider Alice secured the lock on driver D1, and Rider Bob's concurrent request was rejected because the driver is already reserved in our durable ledger."*
+> * **Action for Recorder:** Start on the browser at `http://localhost:9000/`, click the request button, and narrate the `MATCHED / BUSY` status update. Then, cut over to the terminals to run Alice and Bob's race.
+> * **What to say:** *"First, we demonstrate our frontend web dashboard at localhost:9000, where user ride requests successfully trigger background matching and lock driver resources. Next, transitioning to our terminals, we put our mutual exclusion algorithm to the test: Rider Alice successfully secures the lock on driver D1, while Rider Bob's concurrent request is rejected with a conflict status. This proves our mutual exclusion mechanism successfully prevents conflicting operations, ensuring driver resources are safely managed in our durable SQLite ledger."*
 
 ---
 
