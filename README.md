@@ -40,137 +40,160 @@ py demo_coordination.py
 ---
 
 ### Option B: Manual Multi-Terminal Coordination Setup (For Interactive Demo & Video)
-If you prefer to start each node manually and run commands interactively across split terminals, open **5 separate VS Code terminal tabs** inside the project folder and follow **Sections 4 and 5** below.
+If you prefer to start each node manually and run commands interactively across split terminals, open **9 separate VS Code terminal tabs** inside the project folder if running the full integrated web stack, or **5 terminals** for the coordination-only walkthrough.
 
-**CRITICAL STEP:** Before starting the nodes, make sure your `data` and `logs` directories exist, and use the single-line command block below in each terminal so all peers share the exact same SQLite booking ledger and event log directory:
+**CRITICAL STEP:** Before starting the driver or coordination nodes, make sure your `data` and `logs` directories exist, and use the single-line command block below in each terminal so all peers share the exact same SQLite booking ledger and event log directory:
 
-* **Terminal 1 (Peer D1 - Bootstrap Seed):**
+- **Terminal 1 (Event Broker - Port 9200):**
   ```powershell
-  $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"; py coordination_node.py D1 9301
+  py event_broker.py
   ```
-* **Terminal 2 (Peer D2):**
+- **Terminal 2 (Matching Service / Web UI Gateway - Port 9000):**
   ```powershell
-  $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"; py coordination_node.py D2 9302 --seed 127.0.0.1:9301
+  py matching_service.py
   ```
-* **Terminal 3 (Peer D3 - Initial Leader):**
+- **Terminal 3 (Audit Subscriber):**
   ```powershell
-  $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"; py coordination_node.py D3 9303 --seed 127.0.0.1:9301
+  py subscriber.py audit
   ```
-* **Terminal 4 (Client Runner A):**
+- **Terminal 4 (Monitor Subscriber):**
+  ```powershell
+  py subscriber.py monitor
+  ```
+- **Terminal 5 (Driver D1 - Seed):**
+  ```powershell
+  $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"; py driver_service.py D1 9101 37.770 -122.410 drivers.local 9301
+  ```
+- **Terminal 6 (Driver D2):**
+  ```powershell
+  $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"; py driver_service.py D2 9102 37.790 -122.420 drivers.local 9302 127.0.0.1:9301
+  ```
+- **Terminal 7 (Driver D3):**
+  ```powershell
+  $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"; py driver_service.py D3 9103 37.760 -122.400 drivers.local 9303 127.0.0.1:9301
+  ```
+- **Terminal 8 (Driver D4):**
+  ```powershell
+  $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"; py driver_service.py D4 9104 37.780 -122.430 drivers.local 9304 127.0.0.1:9301
+  ```
+- **Terminal 9 (Client / Test Runner Terminal):**
   ```powershell
   $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"; py coordination_client.py 127.0.0.1:9301 status
   ```
-* **Terminal 5 (Client Runner B):**
-  ```powershell
-  $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"
-  ```
-
-*(Optional Full Stack: If running the full HTTP web console from Milestone 3, start `event_broker.py`, `matching_service.py`, `subscriber.py`, and `driver_service.py` for D1–D4 with the two `$env:COORDINATION_*` variables set in each driver terminal).*
 
 ---
 
 ## 4. How to Run the Demo (For Option B Manual Walkthrough — Execute First)
 
-*(Skip this section if you already ran `py demo_coordination.py` in Option A).*
-
-With Terminals 1, 2, and 3 running (`D1`, `D2`, `D3`), wait about 2 seconds for the ring and Bully election to converge, then run the baseline checks in **Terminal 4**:
+With Terminals 1 through 8 running, wait about 2 seconds for the ring and Bully election to converge, then run the baseline checks in **Terminal 9**:
 
 ### Step 1: Verify Bully Leader Election & Shared Ledger Status
-In Terminal 4, query D1 for the current coordination status:
+In Terminal 9, query D1 for the current coordination status:
 ```powershell
 py coordination_client.py 127.0.0.1:9301 status
 ```
-- **Expected Output:** Confirms `D3` (highest numeric ID) was elected leader (`"leader": "D3"`, `"epoch": 1` or higher) and displays the shared `authority`, `bookings`, and `history` tables.
+- **Expected Output:** Confirms the highest priority node was elected leader (`"leader": "D4"` if all 4 are running) and displays the shared `authority`, `bookings`, and `history` tables.
 
-### Step 2: Verify Overlay Ring Connectivity
-In Terminal 4, confirm the underlying P2P ring traversal across all three peers:
+### Step 2: Verify Overlay Ring Connectivity & Web UI (🎥 VIDEO CUE: Show Web Browser Here)
+In Terminal 9, confirm the underlying P2P ring traversal across peers:
 ```powershell
 py peer_client.py scan 127.0.0.1:9301
 ```
-- **Expected Output:** Returns `"status": "complete"` with `"path": ["D1", "D2", "D3"]`.
+- **Expected Output:** Returns `"status": "complete"` with `"path": ["D1", "D2", "D3", "D4"]`.
+
+> 🎥 **VIDEO CUE (Web UI Integration Showcase):**
+> * **Action for Recorder:** Switch window from VS Code to your web browser (`http://localhost:9000/`).
+> * **What to show on screen:** Point out the **Peer-Discovered Driver Pool** table showing all 4 active drivers discovered via background overlay ring queries.
+> * **What to say:** *"As we can see on the web console, all four driver nodes are dynamically discovered through our P2P ring overlay. When a rider submits a request, the matching service consults our SQLite coordination ledger to ensure thread-safe reservations."*
 
 ---
 
 ## 5. How to Reproduce Test Cases (For Option B Manual Walkthrough — Execute After Section 4)
 
-*(Skip this section if you already ran `py demo_coordination.py` in Option A, which executes and asserts these test cases automatically).*
-
 Run these test cases in order to interactively verify all Milestone 4 rubric requirements:
 
-### Test Case 1: Distributed Mutual Exclusion & Preventing Conflicting Operations
-- **What this tests:** Proves that the centralized coordinator issues exclusive 5-second grants (`C_ACQUIRE` -> `CS_ENTER` -> `C_COMMIT` -> `CS_EXIT` -> `C_RELEASE`) and prevents two riders from double-booking the same shared driver resource (`D1`) concurrently.
+### Test Case 1: Distributed Mutual Exclusion & Preventing Conflicting Operations (🎥 VIDEO CUE: Show Web UI Request & Terminal Conflict)
+- **What this tests:** Proves that the centralized coordinator issues exclusive 5-second grants and prevents two riders from double-booking the same shared driver resource concurrently.
 - **Procedure:**
-  1. In **Terminal 4**, start a reservation for `D1` by rider `alice` that holds the critical section lock for 2 seconds:
+  1. **(Optional Web UI Demo):** Go to `http://localhost:9000/`, click **1. Send New Request**, and observe the browser receive an HTTP 200 assigning driver D1 with `lookup_path`.
+  2. In **Terminal 9**, start a reservation for `D1` by rider `alice` holding the critical section lock for 2 seconds:
      ```powershell
      py coordination_client.py 127.0.0.1:9301 reserve --resource D1 --rider alice --request-id alice-1 --hold 2
      ```
-  2. Immediately (within 2 seconds) switch to **Terminal 5** and submit a competing reservation for `D1` by rider `bob` through peer `D2`:
+  3. Immediately submit a competing reservation for `D1` by rider `bob`:
      ```powershell
      py coordination_client.py 127.0.0.1:9302 reserve --resource D1 --rider bob --request-id bob-1 --hold 2
      ```
-- **Expected Output:**
-  * Terminal 4 (`alice`) acquires the lock first and returns `"status": "reserved"`.
-  * Terminal 5 (`bob`) waits until the lock is released, enters the critical section, sees `D1` is already booked in the ledger, and returns `"status": "conflict"`.
-  * Running `py coordination_client.py 127.0.0.1:9301 status` confirms exactly **one** booking for `D1` exists in `bookings`.
+- **Expected Output:** Alice gets `"status": "reserved"`; Bob gets `"status": "conflict"`.
+
+> 🎥 **VIDEO CUE:**
+> * **Action for Recorder:** Highlight the terminal output where Bob receives `"status": "conflict"` while Alice succeeds.
+> * **What to say:** *"This proves our mutual exclusion algorithm successfully prevents conflicting operations. Rider Alice secured the lock on driver D1, and Rider Bob's concurrent request was rejected because the driver is already reserved in our durable ledger."*
 
 ---
 
 ### Test Case 2: Idempotency & Request-ID Conflict Protection
 - **What this tests:** Verifies safe retry handling and rejection of forged/reused request IDs.
 - **Procedure:**
-  1. Repeat the winning command in Terminal 4:
+  1. Repeat the winning command in Terminal 9:
      ```powershell
      py coordination_client.py 127.0.0.1:9301 reserve --resource D1 --rider alice --request-id alice-1
      ```
-  2. Now reuse `alice-1` for a different resource (`D2`):
+  2. Reuse `alice-1` for resource `D2`:
      ```powershell
      py coordination_client.py 127.0.0.1:9301 reserve --resource D2 --rider alice --request-id alice-1
      ```
-- **Expected Output:** Step 1 returns `"status": "reserved", "duplicate": true`. Step 2 returns `"status": "request_id_conflict"`.
+- **Expected Output:** Step 1 returns `"duplicate": true`; Step 2 returns `"status": "request_id_conflict"`.
 
 ---
 
-### Test Case 3: Leader Failure, Automatic Replacement (Failover), & Epoch Fencing
-- **What this tests:** Proves Bully leader failover when the current coordinator (`D3`) crashes or leaves, and verifies that the new coordinator (`D2`) increments the fenced authority epoch and continues serving reservations.
+### Test Case 3: Leader Failure, Automatic Replacement (Failover), & Epoch Fencing (🎥 VIDEO CUE: Show Terminal Kill & Recovery)
+- **What this tests:** Proves Bully leader failover when the current coordinator crashes, and verifies that the new coordinator increments the fenced authority epoch.
 - **Procedure:**
-  1. Go to **Terminal 3** (Leader `D3`) and terminate it (press **Ctrl + C** for graceful departure, or kill the terminal/process via Task Manager / `Stop-Process` for an abrupt crash).
-  2. Wait ~2 seconds for periodic probes (`0.6s` interval) to detect that `D3` is unreachable.
-  3. In **Terminal 4**, check coordination status and reserve driver `D2` for rider `carol`:
+  1. Go to **Terminal 8** (Driver `D4`, the current leader) and press **Ctrl + C** to terminate it.
+  2. Wait ~2 seconds for periodic probes to detect that `D4` is unreachable.
+  3. In **Terminal 9**, check status and reserve driver `D2` for rider `carol`:
      ```powershell
      py coordination_client.py 127.0.0.1:9301 status
      py coordination_client.py 127.0.0.1:9301 reserve --resource D2 --rider carol --request-id carol-1
      ```
-- **Expected Output:**
-  * `status` shows `"leader": "D2"` with an incremented `"epoch"` (fencing out any old grants from `D3`).
-  * `carol`'s reservation of `D2` succeeds with `"status": "reserved"` under the new leader `D2`.
+- **Expected Output:** `status` shows a new leader (`D3`) with an incremented `"epoch"`; Carol's reservation succeeds.
+
+> 🎥 **VIDEO CUE:**
+> * **Action for Recorder:** Show Terminal 8 being stopped with `Ctrl + C`, then zoom in on Terminal 9's status output showing the new leader and incremented epoch.
+> * **What to say:** *"We killed our leader node D4. The Bully election algorithm automatically elected D3 as the new leader, incremented our epoch, and fenced out any stale grants."*
 
 ---
 
 ### Test Case 4: Leader Recovery & Durable Booking Persistence
-- **What this tests:** Demonstrates a higher-priority node (`D3`) rejoining the cluster, reclaiming leadership via the Bully algorithm, and preserving earlier bookings across restarts.
+- **What this tests:** Demonstrates a higher-priority node rejoining the cluster, reclaiming leadership, and preserving earlier bookings across restarts.
 - **Procedure:**
-  1. In **Terminal 3**, restart `D3` using the single-line environment setup:
+  1. In **Terminal 8**, restart `D4`:
      ```powershell
-     $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"; py coordination_node.py D3 9303 --seed 127.0.0.1:9301
+     $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"; py driver_service.py D4 9104 37.780 -122.430 drivers.local 9304 127.0.0.1:9301
      ```
-  2. Wait ~2 seconds, then inspect status and attempt to re-book `D1` in **Terminal 4**:
+  2. In **Terminal 9**, inspect status and attempt to re-book `D1`:
      ```powershell
      py coordination_client.py 127.0.0.1:9301 status
      py coordination_client.py 127.0.0.1:9301 reserve --resource D1 --rider dave --request-id dave-1
      ```
-- **Expected Output:** `D3` reclaims leadership (`"leader": "D3"`), both `D1` (`alice`) and `D2` (`carol`) remain durably booked in the ledger, and `dave`'s attempt to book `D1` is rejected with `"status": "conflict"`.
+- **Expected Output:** `D4` reclaims leadership; earlier bookings remain protected and `dave` gets `"status": "conflict"`.
 
 ---
 
-### Test Case 5: Logical Clock Verification & Deterministic Event Ordering
-- **What this tests:** Proves that every node maintains a monotonic Lamport clock (`L = L + 1` on local/send; `L = max(L, T) + 1` on receive), messages carry logical timestamps, and per-node logs merge into a causally valid total order sorted by `(clock, node, session)`.
+### Test Case 5: Logical Clock Verification & Deterministic Event Ordering (🎥 VIDEO CUE: Show JSONL Log Files)
+- **What this tests:** Proves that every node maintains a monotonic Lamport clock and per-node logs merge into a causally valid total order.
 - **Procedure:**
-  Stop all running peers (`Ctrl + C` in Terminals 1–3), then run the log verifier and exporter in **Terminal 4**:
+  Stop all running peers (`Ctrl + C`), then run the log verifier in **Terminal 9**:
   ```powershell
   py ordered_logs.py logs/manual-take1 --check
   py ordered_logs.py logs/manual-take1 > ordered-events.jsonl
   ```
-- **Expected Output:** `--check` outputs JSON confirming total events processed and verifying that every `SEND` timestamp is strictly less than its corresponding `RECEIVE` timestamp (`SEND.clock < RECEIVE.clock`). `ordered-events.jsonl` contains the complete merged timeline.
+- **Expected Output:** `--check` verifies `SEND.clock < RECEIVE.clock`.
+
+> 🎥 **VIDEO CUE:**
+> * **Action for Recorder:** Open `ordered-events.jsonl` in the VS Code editor on screen and scroll through the JSON records.
+> * **What to say:** *"Here we verify our Lamport logical clocks. Every message carries a logical timestamp, and our merge script validates that every send event strictly precedes its corresponding receive event in causal order."*
 
 ---
 
@@ -195,7 +218,7 @@ flowchart LR
 | **Distributed mutual exclusion** | Centralized coordinator issuing 5-second leased grants (`C_ACQUIRE`, `C_COMMIT`, `C_RELEASE`) bound to `(holder, epoch, token)` | `GRANT`, `COMMIT`, `RELEASE` ledger history; `CS_ENTER` / `CS_EXIT` events |
 | **Shared protected resource** | Durable SQLite booking ledger (`bookings` table) integrated into `coordination_client.py` and `driver_service.py` (`/assign`) | Concurrent reservation race yields 1 `reserved` and 1 `conflict` |
 | **Event ordering** | Offline deterministic merge by `(clock, node, session)` in `ordered_logs.py` | `ordered-events.jsonl` and causal pair verification |
-| **Leader failure & replacement** | Timeout detection (`0.4s` per probe), replacement leader election, and atomic SQLite epoch fencing (`FENCE`) | `D3` crash -> `D2` elected with new epoch; stale grant rejected; `D3` recovery |
+| **Leader failure & replacement** | Timeout detection (`0.4s` per probe), replacement leader election, and atomic SQLite epoch fencing (`FENCE`) | `D4` crash -> `D3` elected with new epoch; stale grant rejected; `D4` recovery |
 
 - **Scope & Assumptions:** This is a same-host, multi-process teaching implementation where all local peer processes coordinate over raw TCP sockets and share a local SQLite database file (`COORDINATION_DB`) as the shared resource authority and fencing boundary. It implements centralized mutual exclusion and timeout-based Bully election rather than multi-host replicated state machine consensus (Raft/Paxos).
 
