@@ -113,22 +113,18 @@ py peer_client.py scan 127.0.0.1:9301
 Run these test cases in order to interactively verify all Milestone 4 rubric requirements:
 
 ### Test Case 1: Distributed Mutual Exclusion & Preventing Conflicting Operations (🎥 VIDEO CUE: Show Web UI Request & Terminal Conflict)
-- **What this tests:** Proves that the centralized coordinator issues exclusive 5-second grants and prevents two riders from double-booking the same shared driver resource concurrently.
+- **What this tests:** Proves that the centralized coordinator issues exclusive 5-second grants, prevents two riders from double-booking the same shared driver resource concurrently, and demonstrates full integration with the web UI dashboard.
 - **Procedure:**
-1. **(Web UI Demonstration):** Open your web browser to `http://localhost:9000/`, click **Send New Request**, and observe the dashboard successfully assign driver `D1` with its GPS coordinates and match status (`MATCHED / BUSY`).
-  2. In **Terminal 9**, start a reservation for `D1` by rider `alice` holding the critical section lock for 2 seconds:
-     ```powershell
-     py coordination_client.py 127.0.0.1:9301 reserve --resource D1 --rider alice --request-id alice-1 --hold 2
-     ```
-  3. Immediately submit a competing reservation for `D1` by rider `bob`:
+  1. **(Web UI Demonstration):** Open your web browser to `http://localhost:9000/`, click **Send New Request** as rider `alice`, and point out on the dashboard how the system dynamically assigns driver `D1` (with its GPS coordinates and match status changing to `MATCHED / BUSY`).
+  2. Immediately switch to **Terminal 9** and submit a competing reservation for that same driver (`D1`) by rider `bob`:
      ```powershell
      py coordination_client.py 127.0.0.1:9302 reserve --resource D1 --rider bob --request-id bob-1 --hold 2
      ```
-- **Expected Output:** Alice gets `"status": "reserved"`; Bob gets `"status": "conflict"`.
+- **Expected Output:** Alice's web request succeeds and locks `D1`; Bob's terminal request returns `"status": "conflict"`.
 
 > 🎥 **VIDEO CUE:**
-> * **Action for Recorder:** Start on the browser at `http://localhost:9000/`, click the request button, and narrate the `MATCHED / BUSY` status update. Then, cut over to the terminals to run Alice and Bob's race.
-> * **What to say:** *"First, we demonstrate our frontend web dashboard at localhost:9000, where user ride requests successfully trigger background matching and lock driver resources. Next, transitioning to our terminals, we put our mutual exclusion algorithm to the test: Rider Alice successfully secures the lock on driver D1, while Rider Bob's concurrent request is rejected with a conflict status. This proves our mutual exclusion mechanism successfully prevents conflicting operations, ensuring driver resources are safely managed in our durable SQLite ledger."*
+> * **Action for Recorder:** Start on the browser at `http://localhost:9000/`, click the request button as rider `alice`, and narrate the `MATCHED / BUSY` status update. Then, cut over to Terminal 9 to run Bob's competing reservation.
+> * **What to say:** *"First, we demonstrate our frontend web dashboard at localhost:9000, where rider Alice's request successfully triggers background matching and locks driver D1. Next, transitioning to our terminals, we put our mutual exclusion algorithm to the test: when rider Bob attempts a concurrent reservation on that exact same driver, his request is instantly rejected with a conflict status. This proves our mutual exclusion mechanism successfully prevents conflicting operations, ensuring driver resources are safely managed in our durable SQLite ledger."*
 
 ---
 
