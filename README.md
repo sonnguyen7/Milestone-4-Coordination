@@ -124,7 +124,7 @@ Run these test cases in order to interactively verify all Milestone 4 rubric req
 ### Test Case 1: Distributed Mutual Exclusion & Preventing Conflicting Operations (🎥 VIDEO CUE: Show Web UI Request & Terminal Conflict)
 - **What this tests:** Proves that the centralized coordinator issues exclusive 5-second grants, prevents two riders from double-booking the same shared driver resource concurrently, and demonstrates full integration with the web UI dashboard.
 - **Procedure:**
-  1. **(Web UI Demonstration):** Open your web browser to `http://localhost:9000/`, click **Send New Request** as rider `alice`, and point out on the dashboard how the system dynamically assigns driver `D1` (with its GPS coordinates and match status changing to `MATCHED / BUSY`).
+  1. **(Web UI Demonstration):** Open your web browser to `http://localhost:9000/`, click **Send New Request** as rider `alice` with request ID `alice-1`. Point out on the dashboard how the system dynamically assigns driver `D1` (with its GPS coordinates and match status changing to `MATCHED / BUSY`).
   2. Immediately switch to **Terminal 9** and submit a competing reservation for that same driver (`D1`) by rider `bob`:
      ```powershell
      py coordination_client.py 127.0.0.1:9302 reserve --resource D1 --rider bob --request-id bob-1 --hold 2
