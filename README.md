@@ -208,13 +208,20 @@ Run these test cases in order to interactively verify all Milestone 4 rubric req
 
 ### Test Case 5: Logical Clock Verification & Deterministic Event Ordering (🎥 VIDEO CUE: Show JSONL Log Files)
 - **What this tests:** Proves that every node maintains a monotonic Lamport clock and per-node logs merge into a causally valid total order.
-- **Procedure:**
-  Stop all running peers (`Ctrl + C`), then run the log verifier in **Terminal 9**:
-  ```powershell
-  py ordered_logs.py logs/manual-take1 --check
-  py ordered_logs.py logs/manual-take1 > ordered-events.jsonl
-  ```
-- **Expected Output:** `--check` verifies `SEND.clock < RECEIVE.clock`.
+- **Procedure:**  
+  i. Stop all running peers (`Ctrl + C` in their terminals).  
+  ii. In **Terminal 9**, run the log verification check:
+     ```powershell
+     py ordered_logs.py logs/manual-take1 --check
+     ```
+  iii. In **Terminal 9**, export the ordered event stream to JSON:
+     ```powershell
+     py ordered_logs.py logs/manual-take1 > ordered-events.json
+     ```
+
+* **Expected Output:**
+  * **Step ii Output:** `--check` verifies that `SEND.clock < RECEIVE.clock` across causal event pairs.
+  * **Step iii Output:** Successfully generates and writes the sorted chronological event stream into `ordered-events.json`.
 
 > 🎥 **VIDEO CUE:**
 > * **Action for Recorder:** Open `ordered-events.jsonl` in the VS Code editor on screen and scroll through the JSON records.
