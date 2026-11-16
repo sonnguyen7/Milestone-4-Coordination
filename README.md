@@ -166,12 +166,17 @@ Run these test cases in order to interactively verify all Milestone 4 rubric req
 - **Procedure:**
   1. Go to **Terminal 8** (Driver `D4`, the current leader) and press **Ctrl + C** to terminate it.
   2. Wait ~2 seconds for periodic probes to detect that `D4` is unreachable.
-  3. In **Terminal 9**, check status and reserve driver `D2` for rider `carol`:
+  3. In **Terminal 9**, check the cluster status to verify the new leader and incremented epoch:
      ```powershell
      py coordination_client.py 127.0.0.1:9301 status
+     ```
+  4. Immediately reserve driver **`D2`** for rider **`carol`** under the new leader:
+     ```powershell
      py coordination_client.py 127.0.0.1:9301 reserve --resource D2 --rider carol --request-id carol-1
      ```
-- **Expected Output:** `status` shows a new leader (`D3`) with an incremented `"epoch"`; Carol's reservation succeeds.
+* **Expected Output:** 
+  * Step iii `status` shows a new leader (`D3`) with an incremented `"epoch"`.
+  * Step iv shows Carol's reservation succeeds with `"status": "reserved"` under the new leader's fenced authority.
 
 > 🎥 **VIDEO CUE:**
 > * **Action for Recorder:** Show Terminal 8 being stopped with `Ctrl + C`, then zoom in on Terminal 9's status output showing the new leader and incremented epoch.
