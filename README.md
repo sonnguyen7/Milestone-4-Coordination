@@ -172,7 +172,7 @@ Run these test cases in order to interactively verify all Milestone 4 rubric req
      ```
   4. Immediately reserve driver **`D2`** for rider **`carol`** under the new leader:
      ```powershell
-     py coordination_client.py 127.0.0.1:9301 reserve --resource D2 --rider carol --request-id carol-1
+     py coordination_client.py 127.0.0.1:9301 reserve --resource D3 --rider carol --request-id carol-1
      ```
 * **Expected Output:** 
   * Step iii `status` shows a new leader (`D3`) with an incremented `"epoch"`.
