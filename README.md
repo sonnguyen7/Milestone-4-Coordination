@@ -80,7 +80,7 @@ If you prefer to start each node manually and run commands interactively across 
   ```
 - **Terminal 9 (Client / Test Runner Terminal):**
   ```powershell
-  $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"; py coordination_client.py 127.0.0.1:9301 status
+  $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"
   ```
 > 🧹 **Important Note on State & Re-Testing:** 
 > Because our system uses a durable SQLite coordination ledger (`COORDINATION_DB`), active locks persist across runs. If you are re-testing or recording multiple takes and encounter unexpected `"status": "conflict"` errors, perform a clean reset before starting:
