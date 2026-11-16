@@ -140,22 +140,21 @@ Run these test cases in order to interactively verify all Milestone 4 rubric req
 ### Test Case 2: Idempotency & Request-ID Conflict Protection
 * **What this tests:** Verifies safe retry handling (idempotency) and rejection of reused or conflicting request IDs.
 * **Procedure:**
-  1. **Initial Successful Grant:** Issue a fresh successful reservation for `D1` using request ID `alice-1` directly from Terminal 9:
-     ```powershell
-     py coordination_client.py 127.0.0.1:9301 reserve --resource D1 --rider alice --request-id alice-1
-     ```
-     *(Verify this returns `"status": "reserved"`).*
-  2. **Test Idempotency (Duplicate):** Immediately re-run that exact same command in Terminal 9:
-     ```powershell
-     py coordination_client.py 127.0.0.1:9301 reserve --resource D1 --rider alice --request-id alice-1
-     ```
-  3. **Test Request-ID Conflict:** Reuse that same request ID (`alice-1`) on a different resource (`D2`):
+  1. **Initial Successful Grant:** Issue a fresh successful reservation for **`D2`** using request ID `alice-1` directly from Terminal 9:
      ```powershell
      py coordination_client.py 127.0.0.1:9301 reserve --resource D2 --rider alice --request-id alice-1
      ```
-* **Expected Output:** 
-  * Step 2 returns `"duplicate": true`.
-  * Step 3 returns `"status": "request_id_conflict"`.
+     *(Verification: This returns `"status": "reserved"`)*
+  2. **Test Idempotency (Duplicate):** Immediately re-run that exact same command in Terminal 9:
+     ```powershell
+     py coordination_client.py 127.0.0.1:9301 reserve --resource D2 --rider alice --request-id alice-1
+     ```
+     *(Verification: This returns `"duplicate": true`)*
+  3. **Test Request-ID Conflict:** Reuse that same request ID (`alice-1`) on a different resource (`D1`):
+     ```powershell
+     py coordination_client.py 127.0.0.1:9301 reserve --resource D1 --rider alice --request-id alice-1
+     ```
+     *(Verification: This returns `"status": "request_id_conflict"`)*
 * **🎥 VIDEO CUE:**
   * **Action for Recorder:** Run the initial successful request for `alice-1`, then immediately re-run it to show the duplicate response, and finally try it on `D2` to show the conflict rejection.
   * **What to say:** *"Next, we test our idempotency and request-ID conflict protection. After successfully securing a resource with request ID `alice-1`, re-sending the identical command correctly identifies it as a duplicate and returns `true`. Furthermore, attempting to reuse that same request ID on a different driver resource is instantly intercepted and rejected with a request-ID conflict status, preventing replay attacks and ledger corruption."*
