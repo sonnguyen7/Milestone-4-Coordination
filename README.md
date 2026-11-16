@@ -186,16 +186,16 @@ Run these test cases in order to interactively verify all Milestone 4 rubric req
 
 ### Test Case 4: Leader Recovery & Durable Booking Persistence
 - **What this tests:** Demonstrates a higher-priority node rejoining the cluster, reclaiming leadership, and preserving earlier bookings across restarts.
-- **Procedure:**
-  i. In **Terminal 8**, restart `D4`:
+- **Procedure:**  
+  1. In **Terminal 8**, restart `D4`:
      ```powershell
      $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"; py driver_service.py D4 9104 37.780 -122.430 drivers.local 9304 127.0.0.1:9301
      ```
-  ii. In **Terminal 9**, check the cluster status to verify that `D4` reclaimed leadership and epoch fenced:
+  2. In **Terminal 9**, check the cluster status to verify that `D4` reclaimed leadership and epoch fenced:
      ```powershell
      py coordination_client.py 127.0.0.1:9301 status
      ```
-  iii. In **Terminal 9**, attempt to reserve resource `D1` as rider `dave`:
+  3. In **Terminal 9**, attempt to reserve resource `D1` as rider `dave`:
      ```powershell
      py coordination_client.py 127.0.0.1:9301 reserve --resource D1 --rider dave --request-id dave-1
      ```
@@ -209,12 +209,12 @@ Run these test cases in order to interactively verify all Milestone 4 rubric req
 ### Test Case 5: Logical Clock Verification & Deterministic Event Ordering (🎥 VIDEO CUE: Show JSONL Log Files)
 - **What this tests:** Proves that every node maintains a monotonic Lamport clock and per-node logs merge into a causally valid total order.
 - **Procedure:**  
-  i. Stop all running peers (`Ctrl + C` in D1-D4 terminals).  
-  ii. In **Terminal 9**, run the log verification check:
+  1. Stop all running peers (`Ctrl + C` in D1-D4 terminals).  
+  2. In **Terminal 9**, run the log verification check:
      ```powershell
      py ordered_logs.py logs/manual-take1 --check
      ```
-  iii. In **Terminal 9**, export the ordered event stream to JSON:
+  3. In **Terminal 9**, export the ordered event stream to JSON:
      ```powershell
      py ordered_logs.py logs/manual-take1 > ordered-events.json
      ```
