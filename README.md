@@ -21,8 +21,10 @@ This milestone extends the peer-to-peer driver overlay from Milestone 3 with dis
 
 ## 3. How to Start Each Service
 
-### Option A: Automated One-Command Demo & Test Suite
-To run the automated 7-test suite and the self-contained 3-process coordination demonstration, open a single terminal in the project folder and run:
+You can run the system using **either** **Option A** (automated one-command execution) **or** **Option B** (manual multi-terminal walkthrough).
+
+### Option A: Automated One-Command Demo & Test Suite (Complete Self-Contained Run)
+To automatically run the 7-test suite and execute the entire 3-process coordination demonstration (Bully election, mutual exclusion contention, leader crash while holding a grant, failover, recovery, and causal log verification) in one shot, open a single terminal and run:
 
 ```powershell
 py -m unittest -v test_coordination
@@ -30,10 +32,15 @@ py demo_coordination.py
 ```
 *(Use `python` or `python3` on macOS/Linux).*
 
+> **Note on Option A:** Running `py demo_coordination.py` automatically launches `D1`, `D2`, and `D3`, executes all demo steps and failure tests from Sections 4 and 5 below, and shuts the processes down cleanly. **If you run Option A, you do not need to manually execute Option B, Section 4, or Section 5.** All generated evidence is saved inside a fresh `demo-evidence/run-<id>/` folder:
+> * `ordered-events.jsonl` & `events/D*-events.jsonl` — Full Lamport logical timestamps (`SEND`, `RECEIVE`, `clock`) in deterministic causal order.
+> * `D1-console.log`, `D2-console.log`, `D3-console.log` — Per-node console logs showing `START`, `JOIN`, and `COORDINATOR` elections.
+> * `summary.json` — Complete snapshot of initial leader (`D3`), concurrent mutex contention (`1 reserved`, `1 conflict`), leader crash failover (`D2`), stale-grant rejection (`stale_leader`), recovery, and the SQLite audit history (`GRANT`, `COMMIT`, `RELEASE`, `FENCE`).
+
 ---
 
 ### Option B: Manual Multi-Terminal Coordination Setup (For Interactive Demo & Video)
-Open **5 separate VS Code terminal tabs** inside the project folder. 
+If you prefer to start each node manually and run commands interactively across split terminals, open **5 separate VS Code terminal tabs** inside the project folder and follow **Sections 4 and 5** below.
 
 **CRITICAL STEP:** Before starting the nodes, run these two lines in **every** terminal (Terminals 1–5) so all peers share the exact same SQLite booking ledger and event log directory:
 
@@ -55,7 +62,9 @@ $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"
 
 ---
 
-## 4. How to Run the Demo (Execute First)
+## 4. How to Run the Demo (For Option B Manual Walkthrough — Execute First)
+
+*(Skip this section if you already ran `py demo_coordination.py` in Option A).*
 
 With Terminals 1, 2, and 3 running (`D1`, `D2`, `D3`), wait about 2 seconds for the ring and Bully election to converge, then run the baseline checks in **Terminal 4**:
 
@@ -75,9 +84,11 @@ py peer_client.py scan 127.0.0.1:9301
 
 ---
 
-## 5. How to Reproduce Test Cases (Execute After Section 4)
+## 5. How to Reproduce Test Cases (For Option B Manual Walkthrough — Execute After Section 4)
 
-Run these test cases in order to verify all Milestone 4 rubric requirements:
+*(Skip this section if you already ran `py demo_coordination.py` in Option A, which executes and asserts these test cases automatically).*
+
+Run these test cases in order to interactively verify all Milestone 4 rubric requirements:
 
 ### Test Case 1: Distributed Mutual Exclusion & Preventing Conflicting Operations
 * **What this tests:** Proves that the centralized coordinator issues exclusive 5-second grants (`C_ACQUIRE` -> `CS_ENTER` -> `C_COMMIT` -> `CS_EXIT` -> `C_RELEASE`) and prevents two riders from double-booking the same shared driver resource (`D1`) concurrently.
@@ -172,7 +183,7 @@ flowchart LR
 | Rubric Requirement | Implementation | Visible Evidence |
 | :--- | :--- | :--- |
 | **Logical clock at each node** | `LogicalClock` in `coordination.py` (one per peer session) | JSONL records showing `node`, `session`, `clock`, `event_id` |
-| **Logical timestamps in messages** | `_call()` and `handle_message()` in `peer_overlay.py` | `SEND`, `RECEIVE`, `SEND_REPLY`, `RECEIVE_REPLY` with `message_id` and `remote_clock` |
+| **Logical timestamps in messages** | `_call()` and `handle_message()` in `peer_overlay.py` | `SEND`, `RECEIVE`, `SEND_REPLY`, `RECEIVE_REPLY` with linkage IDs and `remote_clock` |
 | **Leader election** | Numeric Bully algorithm (`D10 > D9`, `D4 > D3 > D2 > D1`) probing higher peers every `0.6s` (`C_ELECTION` / `C_COORDINATOR`) | `ELECTED` and `LEADER` events; `status` output showing `leader` and `epoch` |
 | **Distributed mutual exclusion** | Centralized coordinator issuing 5-second leased grants (`C_ACQUIRE`, `C_COMMIT`, `C_RELEASE`) bound to `(holder, epoch, token)` | `GRANT`, `COMMIT`, `RELEASE` ledger history; `CS_ENTER` / `CS_EXIT` events |
 | **Shared protected resource** | Durable SQLite booking ledger (`bookings` table) integrated into `coordination_client.py` and `driver_service.py` (`/assign`) | Concurrent reservation race yields 1 `reserved` and 1 `conflict` |
