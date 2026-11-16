@@ -187,16 +187,22 @@ Run these test cases in order to interactively verify all Milestone 4 rubric req
 ### Test Case 4: Leader Recovery & Durable Booking Persistence
 - **What this tests:** Demonstrates a higher-priority node rejoining the cluster, reclaiming leadership, and preserving earlier bookings across restarts.
 - **Procedure:**
-  1. In **Terminal 8**, restart `D4`:
+  i. In **Terminal 8**, restart `D4`:
      ```powershell
      $env:COORDINATION_DB = "$PWD/data/manual-take1.db"; $env:COORDINATION_LOG_DIR = "$PWD/logs/manual-take1"; py driver_service.py D4 9104 37.780 -122.430 drivers.local 9304 127.0.0.1:9301
      ```
-  2. In **Terminal 9**, inspect status and attempt to re-book `D1`:
+  ii. In **Terminal 9**, check the cluster status to verify that `D4` reclaimed leadership and epoch fenced:
      ```powershell
      py coordination_client.py 127.0.0.1:9301 status
+     ```
+  iii. In **Terminal 9**, attempt to reserve resource `D1` as rider `dave`:
+     ```powershell
      py coordination_client.py 127.0.0.1:9301 reserve --resource D1 --rider dave --request-id dave-1
      ```
-- **Expected Output:** `D4` reclaims leadership; earlier bookings remain protected and `dave` gets `"status": "conflict"`.
+
+* **Expected Output:**
+  * **Step ii Output (`status`):** `D4` reclaims leadership (showing `"leader": "D4"` and an incremented epoch), and earlier bookings remain protected in the ledger.
+  * **Step iii Output (`reserve`):** Dave's reservation attempt returns `"status": "conflict"` because `D1` is already booked by Alice.
 
 ---
 
