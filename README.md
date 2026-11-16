@@ -42,7 +42,9 @@ py demo_coordination.py
 ### Option B: Manual Multi-Terminal Coordination Setup (For Interactive Demo & Video)
 If you prefer to start each node manually and run commands interactively across split terminals, open **9 separate VS Code terminal tabs** inside the project folder if running the full integrated web stack, or **5 terminals** for the coordination-only walkthrough.
 
-**CRITICAL STEP:** Before starting the driver or coordination nodes, make sure your `data` and `logs` directories exist, and use the single-line command block below in each terminal so all peers share the exact same SQLite booking ledger and event log directory:
+> ⚠️ **CRITICAL STEP:** Before starting the driver or coordination nodes, make sure your `data` and `logs` directories exist. Use the single-line command block below in each terminal so all peers share the exact same SQLite booking ledger and event log directory.
+> 
+> **Startup Timing Tip:** To prevent `ConnectionRefusedError` (WinError 10061) race conditions, launch your Matching Service in Terminal 2 and wait **2 to 3 seconds** until it prints `Starting Matching Service on port 9000...` before launching your driver nodes.
 
 - **Terminal 1 (Event Broker - Port 9200):**
   ```powershell
