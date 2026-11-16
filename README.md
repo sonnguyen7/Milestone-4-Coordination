@@ -85,7 +85,7 @@ If you prefer to start each node manually and run commands interactively across 
 > 🧹 **Important Note on State & Re-Testing:** 
 > Because our system uses a durable SQLite coordination ledger (`COORDINATION_DB`), active locks persist across runs. If you are re-testing or recording multiple takes and encounter unexpected `"status": "conflict"` errors, perform a clean reset before starting:
 > 1. Stop all running terminal processes using `Ctrl + C`.
-> 2. Run the cleanup command to clear old databases and logs:
+> 2. Run the cleanup command to clear old databases and logs in Terminal 9:
 >    ```powershell
 >    Remove-Item -Force data/*.db -ErrorAction SilentlyContinue; Remove-Item -Recurse -Force logs/* -ErrorAction SilentlyContinue
 >    ```
