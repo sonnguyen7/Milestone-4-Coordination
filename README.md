@@ -209,7 +209,7 @@ Run these test cases in order to interactively verify all Milestone 4 rubric req
 ### Test Case 5: Logical Clock Verification & Deterministic Event Ordering (🎥 VIDEO CUE: Show JSONL Log Files)
 - **What this tests:** Proves that every node maintains a monotonic Lamport clock and per-node logs merge into a causally valid total order.
 - **Procedure:**  
-  i. Stop all running peers (`Ctrl + C` in their terminals).  
+  i. Stop all running peers (`Ctrl + C` in D1-D4 terminals).  
   ii. In **Terminal 9**, run the log verification check:
      ```powershell
      py ordered_logs.py logs/manual-take1 --check
