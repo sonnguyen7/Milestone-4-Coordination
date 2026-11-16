@@ -161,7 +161,7 @@ Run these test cases in order to interactively verify all Milestone 4 rubric req
 
 > 🎥 **VIDEO CUE:**
 > * **Action for Recorder:** Show Terminal 8 being stopped with `Ctrl + C`, then zoom in on Terminal 9's status output showing the new leader and incremented epoch.
-> * **What to say:** *"We killed our leader node D4. The Bully election algorithm automatically elected D3 as the new leader, incremented our epoch, and fenced out any stale grants."*
+> * **What to say:** *"We killed our leader node D4. The Bully election algorithm automatically elected D3 as the new leader, and incremented our epoch. When we immediately send Carol's reservation request, it succeeds under the new leader, proving our epoch fencing works seamlessly."*  
 
 ---
 
