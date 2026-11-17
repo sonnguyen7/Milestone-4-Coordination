@@ -400,7 +400,7 @@ HTML_PAGE = """<!DOCTYPE html>
     <header>
       <div class="title-group">
         <h1>Ride-Matching Architecture Console</h1>
-        <p>Distributed Systems Milestone 3 &mdash; Peer-to-Peer Driver Discovery Overlay</p>
+        <p>Distributed Systems Milestone 4 &mdash; Peer-to-Peer Driver Discovery Overlay</p>
       </div>
       <div class="badge-hub">
         <span class="pulse-dot"></span>
