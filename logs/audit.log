@@ -1,0 +1,28 @@
+[2026-11-16T06:04:58.540+00:00] [audit] RECEIVE {'status': 'ready', 'target': 'ride.assigned'}
+[2026-11-16T06:06:35.507+00:00] [audit] RECEIVE {'op': 'publish', 'target': 'ride.assigned', 'message_id': '53a11275-fc54-4911-ac09-ccb677287a7c', 'timestamp': '2026-11-16T06:06:35.506080+00:00', 'payload': {'status': 'matched', 'ride_id': 'ride-alice-D1', 'driver_id': 'D1', 'request_id': 'req_1794809195308', 'lookup_path': ['D1', 'D2', 'D3', 'D4']}}
+[2026-11-17T14:16:33.543+00:00] [audit] broker unavailable: [WinError 10054] An existing connection was forcibly closed by the remote host; reconnecting
+[2026-11-17T14:16:36.592+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:16:39.637+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:16:42.679+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:16:45.707+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:16:48.734+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:16:51.780+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:16:54.829+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:16:57.871+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:17:00.924+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:17:03.954+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:17:06.982+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:17:10.027+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:17:13.078+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:17:16.133+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:17:19.176+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:17:22.218+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:17:25.263+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:17:28.315+00:00] [audit] RECEIVE {'status': 'ready', 'target': 'ride.assigned'}
+[2026-11-17T14:18:22.085+00:00] [audit] broker unavailable: [WinError 10054] An existing connection was forcibly closed by the remote host; reconnecting
+[2026-11-17T14:18:25.122+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:18:28.167+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:18:31.206+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:18:34.241+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:18:37.293+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting
+[2026-11-17T14:18:40.342+00:00] [audit] broker unavailable: [WinError 10061] No connection could be made because the target machine actively refused it; reconnecting

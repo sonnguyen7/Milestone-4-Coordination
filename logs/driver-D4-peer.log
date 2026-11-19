@@ -1,0 +1,10 @@
+[2026-11-15 22:05:33.634] [driver-D4-peer] START D4 peer=127.0.0.1:9304
+[2026-11-15 22:05:33.686] [driver-D4-peer] JOIN membership=['D1', 'D2', 'D3', 'D4'] neighbors=['D3', 'D1']
+[2026-11-15 22:05:33.798] [driver-D4-peer] COORDINATOR leader=D4 epoch=4
+[2026-11-15 22:05:50.758] [driver-D4-peer] LOOKUP ac30fd2a31d64ece84ccdf9d785e5a9c kind=scan target=None path=D1->D2->D3->D4
+[2026-11-15 22:06:35.347] [driver-D4-peer] LOOKUP b5038a2918074fa199afb9d4b3f2e825 kind=scan target=None path=D1->D2->D3->D4
+[2026-11-15 22:09:38.359] [driver-D4-peer] LEAVE D4
+[2026-11-15 22:34:37.112] [driver-D4-peer] START D4 peer=127.0.0.1:9304
+[2026-11-15 22:34:37.143] [driver-D4-peer] JOIN membership=['D1', 'D2', 'D3', 'D4'] neighbors=['D3', 'D1']
+[2026-11-15 22:34:37.395] [driver-D4-peer] COORDINATOR leader=D4 epoch=6
+[2026-11-16 06:51:04.774] [driver-D4-peer] LEAVE D4

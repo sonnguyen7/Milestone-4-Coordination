@@ -1,0 +1,15 @@
+[2026-11-15 22:05:23.405] [driver-D2-peer] START D2 peer=127.0.0.1:9302
+[2026-11-15 22:05:23.445] [driver-D2-peer] JOIN membership=['D1', 'D2'] neighbors=['D1']
+[2026-11-15 22:05:23.608] [driver-D2-peer] COORDINATOR leader=D2 epoch=2
+[2026-11-15 22:05:27.894] [driver-D2-peer] ANNOUNCE D3 neighbors=['D1', 'D3']
+[2026-11-15 22:05:33.664] [driver-D2-peer] ANNOUNCE D4 neighbors=['D1', 'D3']
+[2026-11-15 22:05:50.751] [driver-D2-peer] LOOKUP ac30fd2a31d64ece84ccdf9d785e5a9c kind=scan target=None path=D1->D2
+[2026-11-15 22:05:50.752] [driver-D2-peer] FORWARD ac30fd2a31d64ece84ccdf9d785e5a9c D2->D3
+[2026-11-15 22:06:35.340] [driver-D2-peer] LOOKUP b5038a2918074fa199afb9d4b3f2e825 kind=scan target=None path=D1->D2
+[2026-11-15 22:06:35.341] [driver-D2-peer] FORWARD b5038a2918074fa199afb9d4b3f2e825 D2->D3
+[2026-11-15 22:09:38.355] [driver-D2-peer] LEAVE D4 neighbors=['D1', 'D3']
+[2026-11-15 22:34:37.137] [driver-D2-peer] ANNOUNCE D4 neighbors=['D1', 'D3']
+[2026-11-16 06:51:04.768] [driver-D2-peer] LEAVE D4 neighbors=['D1', 'D3']
+[2026-11-16 06:51:06.739] [driver-D2-peer] LEAVE D3 neighbors=['D1']
+[2026-11-16 06:51:06.810] [driver-D2-peer] COORDINATOR leader=D2 epoch=8
+[2026-11-16 06:51:08.439] [driver-D2-peer] LEAVE D2

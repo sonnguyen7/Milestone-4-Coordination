@@ -1,0 +1,4 @@
+[2026-11-15 22:05:33.630] [driver-D4] PID 25516; registering with matching service at localhost:9000
+[2026-11-15 22:05:35.756] [driver-D4] registered, assignment port 9104, peer port 9304
+[2026-11-15 22:34:37.108] [driver-D4] PID 36912; registering with matching service at localhost:9000
+[2026-11-15 22:34:39.224] [driver-D4] registered, assignment port 9104, peer port 9304
